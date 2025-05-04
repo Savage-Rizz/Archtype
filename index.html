@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seduction Archetype Quiz</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+
+        .question {
+            background-color: #2a2a2a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .options {
+            margin: 15px 0;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #3a3a3a;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #2a2a2a;
+            border-radius: 8px;
+        }
+
+        .archetype-detail {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #333;
+            border-radius: 8px;
+        }
+
+        .archetype-detail h3 {
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>What's Your Seduction Archetype?</h1>
+    <div id="quiz"></div>
+    <button onclick="calculateResult()">Get Results</button>
+    <div id="result"></div>
+
+    <script>
+        const questions = [
+            {
+                question: "1. How do you usually get someone's attention?",
+                answers: {
+                    A: { text: "Through mystery and silence", archetypes: ["Star", "Coquette"] },
+                    B: { text: "By being passionate and expressive", archetypes: ["Rake"] },
+                    C: { text: "By being charming and polite", archetypes: ["Charmer"] },
+                    D: { text: "Through playful teasing or innocence", archetypes: ["Natural"] },
+                    E: { text: "With confidence and big ideas", archetypes: ["Charismatic"] }
+                }
+            },
+            {
+                question: "2. How would your friends describe your style?",
+                answers: {
+                    A: { text: "Glamorous and eye-catching", archetypes: ["Siren", "Star"] },
+                    B: { text: "Bold and rebellious", archetypes: ["Dandy"] },
+                    C: { text: "Elegant and romantic", archetypes: ["IdealLover"] },
+                    D: { text: "Soft and approachable", archetypes: ["Natural", "Charmer"] },
+                    E: { text: "Always talking about your vision or goals", archetypes: ["Charismatic"] }
+                }
+            },
+            {
+                question: "3. What do you value most in relationships?",
+                answers: {
+                    A: { text: "Excitement and unpredictability", archetypes: ["Coquette", "Rake"] },
+                    B: { text: "Deep emotional connection", archetypes: ["IdealLover"] },
+                    C: { text: "Being admired or adored", archetypes: ["Star", "Siren"] },
+                    D: { text: "Feeling free and independent", archetypes: ["Dandy"] },
+                    E: { text: "Helping and inspiring others", archetypes: ["Charmer", "Charismatic"] }
+                }
+            },
+            {
+                question: "4. In a social setting, you are the one who...",
+                answers: {
+                    A: { text: "Tells captivating stories", archetypes: ["Charismatic", "Star"] },
+                    B: { text: "Listens and mirrors others' feelings", archetypes: ["IdealLover", "Charmer"] },
+                    C: { text: "Flirts shamelessly and confidently", archetypes: ["Rake", "Siren"] },
+                    D: { text: "Plays it cool, making people chase you", archetypes: ["Coquette"] },
+                    E: { text: "Acts naturally and makes others laugh", archetypes: ["Natural"] }
+                }
+            },
+            {
+                question: "5. When you like someone, your first move is to...",
+                answers: {
+                    A: { text: "Stare or smile seductively", archetypes: ["Siren", "Star"] },
+                    B: { text: "Compliment them sincerely", archetypes: ["IdealLover"] },
+                    C: { text: "Make them laugh or joke around", archetypes: ["Natural"] },
+                    D: { text: "Be hot one moment, cold the next", archetypes: ["Coquette"] },
+                    E: { text: "Talk about your passions and values", archetypes: ["Charismatic"] }
+                }
+            },
+            {
+                question: "6. Which quote resonates most with you?",
+                answers: {
+                    A: { text: "Mystery is the key to seduction", archetypes: ["Star", "Coquette"] },
+                    B: { text: "Nothing is more attractive than passion", archetypes: ["Rake", "Siren"] },
+                    C: { text: "Kindness is irresistible", archetypes: ["Charmer"] },
+                    D: { text: "Rules are made to be broken", archetypes: ["Dandy"] },
+                    E: { text: "I see what they need and become it", archetypes: ["IdealLover"] }
+                }
+            },
+            {
+                question: "7. What's your biggest romantic strength?",
+                answers: {
+                    A: { text: "My confidence and intensity", archetypes: ["Rake", "Charismatic"] },
+                    B: { text: "My emotional intelligence", archetypes: ["IdealLover", "Charmer"] },
+                    C: { text: "My unpredictability", archetypes: ["Coquette", "Star"] },
+                    D: { text: "My innocence and spontaneity", archetypes: ["Natural"] },
+                    E: { text: "My androgynous or unique style", archetypes: ["Dandy"] }
+                }
+            },
+            {
+                question: "8. What's your biggest romantic weakness?",
+                answers: {
+                    A: { text: "I get bored easily", archetypes: ["Rake", "Coquette"] },
+                    B: { text: "I focus too much on others' needs", archetypes: ["IdealLover", "Charmer"] },
+                    C: { text: "I try too hard to be different", archetypes: ["Dandy"] },
+                    D: { text: "I'm too shy to act", archetypes: ["Natural", "Star"] },
+                    E: { text: "I come off too strong", archetypes: ["Charismatic", "Rake"] }
+                }
+            },
+            {
+                question: "9. How do you want others to feel around you?",
+                answers: {
+                    A: { text: "Excited and a little overwhelmed", archetypes: ["Siren", "Rake"] },
+                    B: { text: "Safe and understood", archetypes: ["Charmer", "IdealLover"] },
+                    C: { text: "Curious and fascinated", archetypes: ["Star", "Coquette"] },
+                    D: { text: "Inspired and empowered", archetypes: ["Charismatic"] },
+                    E: { text: "Comfortable and entertained", archetypes: ["Natural"] }
+                }
+            },
+            {
+                question: "10. What role do you usually play in a group?",
+                answers: {
+                    A: { text: "The showstopper or head-turner", archetypes: ["Star", "Siren"] },
+                    B: { text: "The mood-lifter", archetypes: ["Natural"] },
+                    C: { text: "The quiet one people want to figure out", archetypes: ["Coquette"] },
+                    D: { text: "The confident rebel", archetypes: ["Dandy", "Rake"] },
+                    E: { text: "The thoughtful supporter", archetypes: ["Charmer", "IdealLover"] }
+                }
+            }
+        ];
+
+        const archetypePersonalities = {
+            Siren: "You know that person who walks into a room and everyone stares? Their voice is smooth, their body language is confident, and they don't even have to try too hard — they just have that vibe. This type uses beauty, grace, and allure to make people fall. It's like a walking fantasy.",
+            Rake: "This one's the romantic daredevil. They say the right things, flirt deeply, and make you feel like you're the only one in the world — even if they flirt with 10 others later. They're all passion and fire. You'd fall for them fast... and maybe regret it later.",
+            IdealLover: "They make you feel seen. They pay attention to little details, understand your dreams, and become the exact person you were wishing for. Being around them feels like a movie romance — calm, deep, and dreamy.",
+            Dandy: "This person doesn't follow any rules — not masculine, not feminine — just themselves. They wear what they want, act how they feel, and their confidence makes them stand out. You never know what they'll do next, and that mystery is hot.",
+            Natural: "They're like a fun, playful kid — laughing easily, innocent but a little naughty. They make people feel light, relaxed, and happy. You can't help but want to be around their positive energy.",
+            Coquette: "They give you just enough attention to get you hooked... then pull back. Hot one moment, cold the next. They make you chase them, and just when you're about to give up — they smile, and boom, you're back in. Total mind game master.",
+            Charmer: "Smooth talker. Always knows what to say. They make everyone feel good — the kind of person who compliments your hair, remembers your favorite song, and makes you smile without being too intense. They're friendly, warm, and persuasive.",
+            Star: "They shine. Confidence, mystery, and a bit of magic. People are drawn to them, want to know more, want to be around them. It's not about beauty — it's about presence. Like a celebrity, even if they're not famous.",
+            Charismatic: "Your vision inspires devotion. Others want to follow your lead and energy. You have a magnetic personality that draws people in.",
+            Seductress: "This one is subtle but powerful. They listen more than they speak, look you right in the eyes, and slowly pull you in. They're not loud or flashy — they're emotionally smart, mysterious, and know exactly how to make you crave more."
+        };
+
+        // Generate quiz HTML
+        let quizHTML = '';
+        questions.forEach((q, index) => {
+            quizHTML += `<div class="question">
+                <p>${q.question}</p>
+                <div class="options">`;
+            
+            for (const [key, value] of Object.entries(q.answers)) {
+                quizHTML += `
+                    <label>
+                        <input type="radio" name="q${index}" value="${key}">
+                        ${key}. ${value.text}
+                    </label>`;
+            }
+            
+            quizHTML += `</div></div>`;
+        });
+        document.getElementById('quiz').innerHTML = quizHTML;
+
+        function calculateResult() {
+            const scores = {
+                Siren: 0, Rake: 0, IdealLover: 0, Dandy: 0,
+                Natural: 0, Coquette: 0, Charmer: 0, Charismatic: 0, Star: 0, Seductress: 0
+            };
+
+            // Calculate scores
+            questions.forEach((q, index) => {
+                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                if (selected) {
+                    const selectedArchetypes = q.answers[selected.value].archetypes;
+                    selectedArchetypes.forEach(arch => scores[arch]++);
+                }
+            });
+
+            // Find highest score
+            const maxScore = Math.max(...Object.values(scores));
+            const resultArchetypes = Object.keys(scores).filter(arch => scores[arch] === maxScore);
+
+            // Display result
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<h2>Your Seduction Archetype${resultArchetypes.length > 1 ? 's' : ''}:</h2>`;
+            
+            resultArchetypes.forEach(arch => {
+                resultDiv.innerHTML += `
+                    <div class="archetype-detail">
+                        <h3>The ${arch}</h3>
+                        <p>${archetypePersonalities[arch]}</p>
+                    </div>`;
+            });
+            
+            resultDiv.style.display = 'block';
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
